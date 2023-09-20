@@ -1,0 +1,227 @@
+<?xml version="1.0"?>
+<robot name="arm">
+<!-- https://www.rapidtables.com/web/color/RGB_Color.html -->
+    <link name="world"/>
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.05" radius="0.2"/>
+            </geometry>
+            <material name="Orange">
+                <color rgba="1 0.5 0 1"/>
+            </material>
+            <origin xyz="0 0 0.025" rpy="0 0 0" />
+        </visual>
+ 
+
+        <collision>
+            <geometry>
+                <cylinder length="0.05" radius="0.2"/>
+            </geometry>
+            <origin xyz="0 0 0.025" rpy="0 0 0" />
+        </collision>
+ 
+
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0.025"/>
+            <mass value="5.0"/>
+            <inertia ixx="0.0135" ixy="0.0" ixz="0.0" iyy="0.0135" iyz="0.0" izz="0.05"/>
+        </inertial>
+    </link>
+ 
+
+    <joint name="world_base_joint" type="fixed">
+        <parent link="world"/>
+        <child link="base_link"/>
+        <dynamics damping="10" friction="1.0"/>
+    </joint>
+ 
+
+    <link name="arm1_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.5" radius="0.08"/>
+            </geometry>
+            <material name="Blue">
+                <color rgba="0 0 1 1"/>
+            </material>
+            <origin xyz="0 0 0.25" rpy="0 0 0" />
+        </visual>
+ 
+
+        <collision>
+            <geometry>
+                <cylinder length="0.5" radius="0.08"/>
+            </geometry>
+            <origin xyz="0 0 0.25" rpy="0 0 0" />
+        </collision>
+         
+
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0.25"/>
+            <mass value="5.0"/>
+            <inertia ixx="0.107" ixy="0.0" ixz="0.0" iyy="0.107" iyz="0.0" izz="0.0125"/>
+        </inertial>
+ 
+
+    </link>
+   
+
+    <joint name="base_arm1_joint" type="revolute">
+        <axis xyz="0 1 0"/>
+        <parent link="base_link"/>
+        <child link="arm1_link"/>
+        <origin xyz="0.0 0.0 0.05" rpy="0 0 0" />
+        <limit lower="-2.14" upper="2.14" effort="100" velocity="100" />
+        <dynamics damping="10" friction="1.0"/>
+    </joint>
+ 
+
+      
+
+ 
+
+    <link name="arm2_link">
+        <inertial>
+            <origin xyz="0 0 0.25" rpy="0 0 0" />
+            <mass value="0.01"/>
+            <inertia ixx="0.027" ixy="0.0" ixz="0.0" iyy="0.027" iyz="0.0" izz="0.0025"/>
+        </inertial>
+         
+
+        <visual>
+            <geometry>
+            <cylinder length="0.5" radius="0.05"/>
+            </geometry>
+            <material name="White">
+                <color rgba="1 1 1 1"/>
+            </material>
+            <origin rpy="0 0 0" xyz="0 0 0.25"/>
+        </visual>
+ 
+
+        <collision>
+            <geometry>
+                <cylinder length="0.4" radius="0.05"/>
+            </geometry>
+            <origin xyz="0 0 0.25" rpy="0 0 0" />
+        </collision>
+    </link>
+ 
+
+    <joint name="arm1_arm2_joint" type="revolute">
+        <parent link="arm1_link"/>
+        <child link="arm2_link"/>
+        <origin xyz="0.0 0.0 0.5" rpy="0 0 0" />
+        <axis xyz="0 1 0"/>
+        <limit lower="-2.14" upper="2.14" effort="100" velocity="100" />
+        <dynamics damping="10" friction="1.0"/>
+    </joint>
+ 
+
+    <link name="arm3_link">
+        <inertial>
+            <origin xyz="0 0 0.15" rpy="0 0 0" />
+            <mass value="0.01"/>
+            <inertia ixx="0.027" ixy="0.0" ixz="0.0" iyy="0.027" iyz="0.0" izz="0.0025"/>
+        </inertial>
+        <visual>
+            <geometry>
+                <cylinder length="0.3" radius="0.03"/>
+            </geometry>
+            <material name="Red">
+                <color rgba="1 0 0 1"/>
+            </material>
+            <origin rpy="0 0 0" xyz="0 0 0.15"/>
+        </visual>
+ 
+
+        <collision>
+            <geometry>
+                <cylinder length="0.3" radius="0.03"/>
+            </geometry>
+            <origin xyz="0 0 0.15" rpy="0 0 0" />
+        </collision>
+    </link>
+ 
+
+    <joint name="arm2_arm3_joint" type="revolute">
+        <parent link="arm2_link"/>
+        <child link="arm3_link"/>
+        <origin xyz="0.0 0.0 0.5" rpy="0 0 0" />
+        <axis xyz="0 1 0"/>
+        <limit lower="-2.14" upper="2.14" effort="100" velocity="100" />
+        <dynamics damping="10" friction="1.0"/>
+    </joint>
+ 
+
+    <gazebo reference="base_link">
+        <material>Gazebo/Orange</material>
+    </gazebo>
+ 
+
+    <gazebo reference="arm1_link">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+ 
+
+    <gazebo reference="arm2_link">
+        <material>Gazebo/White</material>
+    </gazebo>
+ 
+
+    <gazebo reference="arm3_link">
+        <material>Gazebo/Red</material>
+    </gazebo>
+ 
+
+ 
+
+    <gazebo>
+        <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+            <robot_sim_type>gazebo_ros2_control/GazeboSystem</robot_sim_type>
+            <parameters>/home/divyamc/divyam_ws/src/lab_5/config/control.yaml</parameters>
+        </plugin>
+    </gazebo>
+ 
+
+    <ros2_control name="GazeboSystem" type="system">
+        <hardware>
+            <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </hardware>
+ 
+
+        <joint name="base_arm1_joint">
+            <command_interface name="position">
+                <param name="min">-2.14</param>
+                <param name="max">2.14</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <param name="initial_position">0.0</param>
+
+        </joint>
+        <joint name="arm1_arm2_joint">
+            <command_interface name="position">
+            <param name="min">-2.14</param>
+            <param name="max">2.14</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <param name="initial_position">0.1</param>
+
+        </joint>
+        <joint name="arm2_arm3_joint">
+            <command_interface name="position">
+                <param name="min">-2.14</param>
+                <param name="max">2.14</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <param name="initial_position">0.2</param>
+
+        </joint>
+ 
+
+    </ros2_control>
+ 
+
+</robot>
+ 
